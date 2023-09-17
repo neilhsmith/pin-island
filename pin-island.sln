@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{77ACCE23-DA98-47EC-A158-894A56B8CB3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0552AF80-ADB1-4F45-B316-09EAFAE2A46B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PinIsland.Api", "server\src\PinIsland.Api\PinIsland.Api.csproj", "{DC57C335-0A74-4549-A219-6AE2274E8587}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC57C335-0A74-4549-A219-6AE2274E8587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC57C335-0A74-4549-A219-6AE2274E8587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC57C335-0A74-4549-A219-6AE2274E8587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC57C335-0A74-4549-A219-6AE2274E8587}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0552AF80-ADB1-4F45-B316-09EAFAE2A46B} = {77ACCE23-DA98-47EC-A158-894A56B8CB3C}
+		{DC57C335-0A74-4549-A219-6AE2274E8587} = {0552AF80-ADB1-4F45-B316-09EAFAE2A46B}
+	EndGlobalSection
+EndGlobal

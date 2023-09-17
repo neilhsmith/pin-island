@@ -24,3 +24,19 @@ Join or form a community to enrich any website with additional insights by placi
   - **super_user**: superuser1 / Password123$
   - **user**: bob / bob
   - **user**: alice / alice
+
+## API
+
+- **URL**: https://localhost:5050
+
+To start the project from the root dir:
+```
+dotnet run --project .\server\src\PinIsland.Api\
+```
+
+From the project's dir:
+```
+cd server/src/PinIsland.Api && dotnet run
+```
+
+Or debug with the vscode launch config.
