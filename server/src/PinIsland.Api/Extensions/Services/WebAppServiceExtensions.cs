@@ -1,8 +1,11 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Linkster.Api.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+using Microsoft.EntityFrameworkCore;
 using PinIsland.Api.Configurations;
+using PinIsland.Api.Database;
 using PinIsland.Api.Services;
 
 namespace PinIsland.Api.Extensions.Services;
@@ -11,6 +14,11 @@ public static class WebAppServiceExtensions
 {
   public static void ConfigureServices(this WebApplicationBuilder builder)
   {
+    var connectionString = builder.Configuration.GetConnectionStringOptions().LinksterApiDevDb;
+    builder.Services.AddDbContext<AppDbContext>(options =>
+      options.UseSqlServer(connectionString,
+                builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
     var idpOptions = builder.Configuration.GetIdentityProviderOptions();
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       .AddJwtBearer(options =>
