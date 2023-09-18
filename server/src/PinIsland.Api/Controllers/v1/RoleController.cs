@@ -40,7 +40,7 @@ public class RoleController : ControllerBase
 
   [HttpPut(Name = "UpdateRole")]
   [Authorize(Policy = "write_access")]
-  public async Task<ActionResult<RoleDto>> UpdateRole(Guid id, [FromBody] UpdateRoleDto updateRoleDto)
+  public async Task<ActionResult> UpdateRole(Guid id, [FromBody] UpdateRoleDto updateRoleDto)
   {
     var command = new UpdateRole.Command(id, updateRoleDto);
     await _mediator.Send(command);
