@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using PinIsland.Api.Database;
+using PinIsland.Api.Extensions;
 
 namespace PinIsland.Api.Domain.Roles.Features;
 
@@ -19,15 +20,13 @@ public static class AddRole
 
     public async Task<RoleDto> Handle(Command request, CancellationToken cancellationToken)
     {
-      // FIXME: the normalized name must be unique
-
       var validator = new AddRoleValidator();
       validator.ValidateAndThrow(request.AddRoleDto);
 
       var role = new Role
       {
         Name = request.AddRoleDto.Name,
-        NormalizedName = request.AddRoleDto.Name.Normalize()
+        NormalizedName = request.AddRoleDto.Name.Sanatize()
       };
 
       await _dbContext.Roles.AddAsync(role, cancellationToken);
