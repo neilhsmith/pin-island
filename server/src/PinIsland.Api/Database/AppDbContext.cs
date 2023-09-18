@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using PinIsland.Api.Database.Converters;
 using PinIsland.Api.Domain;
+using PinIsland.Api.Domain.Roles;
 using PinIsland.Api.Extensions.Application;
 
 namespace PinIsland.Api.Database;
 
 public sealed class AppDbContext : DbContext
 {
+  public DbSet<Role> Roles { get; set; }
+
   public AppDbContext(DbContextOptions<AppDbContext> options)
     : base(options) { }
 
