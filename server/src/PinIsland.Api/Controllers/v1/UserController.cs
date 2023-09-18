@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PinIsland.Api.Domain.Users;
 using PinIsland.Api.Domain.Users.Features;
+using PinIsland.Api.Domain.Users.Features.UserRoles;
 
 namespace PinIsland.Api.Controllers.v1;
 
@@ -79,6 +80,24 @@ public class UserController : ControllerBase
   public async Task<ActionResult> DeleteUser(Guid id)
   {
     var command = new DeleteUser.Command(id);
+    await _mediator.Send(command);
+    return NoContent();
+  }
+
+  [HttpPost("{userId:guid}/roles", Name = "AddUserRole")]
+  [Authorize(Policy = "write_access")]
+  public async Task<ActionResult> AddUserRole([FromRoute] Guid userId, AddUserRoleDto addUserRoleDto)
+  {
+    var command = new AddUserRole.Command(userId, addUserRoleDto);
+    await _mediator.Send(command);
+    return NoContent();
+  }
+
+  [HttpDelete("{userId:guid}/roles/{roleId:guid}", Name = "DeleteUserRole")]
+  [Authorize(Policy = "write_access")]
+  public async Task<ActionResult> DeleteUserRole([FromRoute] Guid userId, [FromRoute] Guid roleId)
+  {
+    var command = new DeleteUserRole.Command(userId, roleId);
     await _mediator.Send(command);
     return NoContent();
   }

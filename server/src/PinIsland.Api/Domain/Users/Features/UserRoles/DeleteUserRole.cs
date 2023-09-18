@@ -5,9 +5,9 @@ using PinIsland.Api.Extensions;
 
 namespace PinIsland.Api.Domain.Users.Features.UserRoles;
 
-public static class AddUserRole
+public static class DeleteUserRole
 {
-  public sealed record Command(Guid UserId, AddUserRoleDto AddUserRoleDto) : IRequest;
+  public sealed record Command(Guid UserId, Guid RoleId) : IRequest;
 
   public sealed class Handler : IRequestHandler<Command>
   {
@@ -20,16 +20,11 @@ public static class AddUserRole
 
     public async Task Handle(Command request, CancellationToken cancellationToken)
     {
-      var user = await _dbContext.Users.FirstAsync(user => user.Id == request.UserId);
-      var role = await _dbContext.Roles.FirstAsync(role => role.NormalizedName == request.AddUserRoleDto.Name.Sanatize());
+      var user = await _dbContext.Users.Include(user => user.Roles).FirstAsync(user => user.Id == request.UserId);
+      var role = await _dbContext.Roles.FirstAsync(role => role.Id == request.RoleId);
 
-      user.Roles.Add(role);
+      user.Roles.Remove(role);
       await _dbContext.SaveChangesAsync(cancellationToken);
     }
   }
-}
-
-public sealed class AddUserRoleDto
-{
-  public string Name { get; set; } = default!;
 }
