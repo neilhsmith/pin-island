@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,32 @@ public class RoleController : ControllerBase
   {
     var query = new GetRole.Query(id);
     var response = await _mediator.Send(query);
+    return Ok(response);
+  }
+
+  [HttpGet(Name = "GetRoles")]
+  [Authorize(Policy = "read_access")]
+  public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles([FromQuery] GetRoleListDto getRoleListDto)
+  {
+    var query = new GetRoleList.Query(getRoleListDto);
+    var response = await _mediator.Send(query);
+
+    var paginationMetadata = new
+    {
+      totalCount = response.TotalCount,
+      pageSize = response.PageSize,
+      currentPageSize = response.CurrentPageSize,
+      currentStartIndex = response.CurrentStartIndex,
+      currentEndIndex = response.CurrentEndIndex,
+      pageNumber = response.PageNumber,
+      totalPages = response.TotalPages,
+      hasPrevious = response.HasPrevious,
+      hasNext = response.HasNext
+    };
+
+    // TODO: create an extension for this
+    Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
     return Ok(response);
   }
 
