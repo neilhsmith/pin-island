@@ -5,7 +5,7 @@ Join or form a community to enrich any website with additional insights by placi
 ## Auth Server
 
 - **URL**: http://localhost:5454
-- **Realm**: pin-island-dev
+- **Realm**: pin-island
 - **Clients**:
   - **Api Swagger**: pin-island.api.swagger
   - **Web Public**: pin-island.web.public
