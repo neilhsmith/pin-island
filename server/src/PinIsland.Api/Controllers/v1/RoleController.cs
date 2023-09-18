@@ -9,7 +9,7 @@ namespace PinIsland.Api.Controllers.v1;
 
 [Authorize]
 [ApiController]
-[Route("api/role")]
+[Route("api/roles")]
 public class RoleController : ControllerBase
 {
   private readonly ILogger<RoleController> _logger;
