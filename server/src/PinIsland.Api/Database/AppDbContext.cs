@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PinIsland.Api.Database.Configurations;
 using PinIsland.Api.Database.Converters;
 using PinIsland.Api.Domain;
 using PinIsland.Api.Domain.Roles;
@@ -17,6 +18,8 @@ public sealed class AppDbContext : DbContext
   {
     base.OnModelCreating(modelBuilder);
     modelBuilder.FilterSoftDeletedRecords();
+
+    modelBuilder.ApplyConfiguration(new RoleConfiguration());
   }
 
   protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

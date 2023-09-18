@@ -46,6 +46,12 @@ public static class WebAppServiceExtensions
 
     builder.Services.AddHttpContextAccessor();
 
+    builder.Services.AddMediatR(config => config
+      .RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+    builder.Services.AddMediatR(config => config
+      .RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
     // registers all services that inherit from your base service interface - IPinIslandApiScopedService
     builder.Services.AddBoundaryServices(Assembly.GetExecutingAssembly());
 
