@@ -13,11 +13,6 @@ Join or form a community to enrich any website with additional insights by placi
 - **Scopes**:
   - pin-island_api_read
   - pin-island_api_write
-- **Roles**:
-  - super_admin
-  - admin
-  - super_user
-  - user (default)
 - **Test Users**:
   - **super_admin**: theadmin / Password123$
   - **admin**: admin1 / Password123$
@@ -28,6 +23,11 @@ Join or form a community to enrich any website with additional insights by placi
 ## API
 
 - **URL**: https://localhost:5050
+- **Roles**:
+  - SuperAdmin
+  - Admin
+  - SuperUser
+  - User
 
 To start the project from the root dir:
 ```
