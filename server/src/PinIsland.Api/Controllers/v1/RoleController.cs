@@ -20,11 +20,13 @@ public class RoleController : ControllerBase
     _mediator = mediator;
   }
 
-  [HttpGet("{roleId:guid}", Name = "GetRole")]
+  [HttpGet("{id:guid}", Name = "GetRole")]
   [Authorize(Policy = "read_access")]
-  public async Task<ActionResult<RoleDto>> GetRole(Guid roleId)
+  public async Task<ActionResult<RoleDto>> GetRole(Guid id)
   {
-    throw new NotImplementedException();
+    var query = new GetRole.Query(id);
+    var response = await _mediator.Send(query);
+    return Ok(response);
   }
 
   [HttpPost(Name = "AddRole")]
@@ -33,7 +35,6 @@ public class RoleController : ControllerBase
   {
     var command = new AddRole.Command(addRoleDto);
     var response = await _mediator.Send(command);
-
     return CreatedAtRoute("GetRole", new { response.Id }, response);
   }
 }
