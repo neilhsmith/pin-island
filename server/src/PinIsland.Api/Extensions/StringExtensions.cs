@@ -2,7 +2,7 @@ namespace PinIsland.Api.Extensions;
 
 public static class StringExtensions
 {
-  public static string Normalize(this string value)
+  public static string Sanatize(this string value)
   {
     return value.Replace(" ", "").ToLower();
   }

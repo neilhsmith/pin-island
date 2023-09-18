@@ -37,4 +37,13 @@ public class RoleController : ControllerBase
     var response = await _mediator.Send(command);
     return CreatedAtRoute("GetRole", new { response.Id }, response);
   }
+
+  [HttpPut(Name = "UpdateRole")]
+  [Authorize(Policy = "write_access")]
+  public async Task<ActionResult<RoleDto>> UpdateRole(Guid id, [FromBody] UpdateRoleDto updateRoleDto)
+  {
+    var command = new UpdateRole.Command(id, updateRoleDto);
+    await _mediator.Send(command);
+    return NoContent();
+  }
 }
