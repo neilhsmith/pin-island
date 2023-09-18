@@ -46,4 +46,13 @@ public class RoleController : ControllerBase
     await _mediator.Send(command);
     return NoContent();
   }
+
+  [HttpDelete(Name = "DeleteRole")]
+  [Authorize(Policy = "write_access")]
+  public async Task<ActionResult> DeleteRole(Guid id)
+  {
+    var command = new DeleteRole.Command(id);
+    await _mediator.Send(command);
+    return NoContent();
+  }
 }
