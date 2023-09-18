@@ -3,6 +3,7 @@ using PinIsland.Api.Database.Configurations;
 using PinIsland.Api.Database.Converters;
 using PinIsland.Api.Domain;
 using PinIsland.Api.Domain.Roles;
+using PinIsland.Api.Domain.Users;
 using PinIsland.Api.Extensions.Application;
 
 namespace PinIsland.Api.Database;
@@ -10,6 +11,7 @@ namespace PinIsland.Api.Database;
 public sealed class AppDbContext : DbContext
 {
   public DbSet<Role> Roles { get; set; }
+  public DbSet<User> Users { get; set; }
 
   public AppDbContext(DbContextOptions<AppDbContext> options)
     : base(options) { }
