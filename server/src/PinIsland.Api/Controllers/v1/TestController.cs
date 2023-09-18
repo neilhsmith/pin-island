@@ -22,6 +22,7 @@ public class TestController : ControllerBase
     return Ok(new TestDto
     {
       Result = "Success from the public test",
+      Token = Request.Headers["Authorization"],
       Claims = User.Claims.ToList()
     });
   }
@@ -34,6 +35,7 @@ public class TestController : ControllerBase
     return Ok(new TestDto
     {
       Result = "Success from the private test",
+      Token = Request.Headers["Authorization"],
       Claims = User.Claims.ToList()
     });
   }
@@ -42,5 +44,6 @@ public class TestController : ControllerBase
 public class TestDto
 {
   public string? Result { get; set; }
+  public string? Token { get; set; }
   public List<Claim>? Claims { get; set; }
 }
