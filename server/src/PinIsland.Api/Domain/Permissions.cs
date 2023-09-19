@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Linkster.Api.Domain.Authorization;
+namespace PinIsland.Api.Domain.Authorization;
 
 public static class Permissions
 {

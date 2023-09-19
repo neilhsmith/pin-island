@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PinIsland.Api.Domain.Roles;
 using PinIsland.Api.Domain.Roles.Features;
+using PinIsland.Api.Domain.Roles.Features.RolePermissions;
 
 namespace PinIsland.Api.Controllers.v1;
 
@@ -82,4 +83,22 @@ public class RoleController : ControllerBase
     await _mediator.Send(command);
     return NoContent();
   }
+
+  // [HttpPost("{roleId:guid}/role-permissions/{permission}", Name = "AddRolePermission")]
+  // [Authorize(Policy = "write_access")]
+  // public async Task<ActionResult> AddRolePermission([FromRoute] Guid roleId, [FromRoute] string permission)
+  // {
+  //   var command = new AddRolePermission.Command(roleId, permission);
+  //   await _mediator.Send(command);
+  //   return NoContent();
+  // }
+
+  // [HttpDelete("{roleId:guid}/role-permissions/{permission:string}", Name = "DeleteRolePermission")]
+  // [Authorize(Policy = "write_access")]
+  // public async Task<ActionResult> DeleteRolePermission([FromRoute] Guid roleId, [FromRoute] string permission)
+  // {
+  //   var command = new DeleteRolePermission.Command(roleId, permission);
+  //   await _mediator.Send(command);
+  //   return NoContent();
+  // }
 }

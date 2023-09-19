@@ -32,6 +32,9 @@ public class TestController : ControllerBase
   [Authorize("read_access")]
   public ActionResult<TestDto> GetPrivate()
   {
+    var user = Request.HttpContext.User;
+    var identity = Request.HttpContext.User.Identity;
+    var claims = Request.HttpContext.User.Claims.ToList();
     return Ok(new TestDto
     {
       Result = "Success from the private test",
