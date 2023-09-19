@@ -1,6 +1,7 @@
 using System.Reflection;
 using PinIsland.Api.Configurations;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PinIsland.Api.Extensions.Services;
 
@@ -12,6 +13,8 @@ public static class SwaggerServiceExtension
 
     services.AddSwaggerGen(options =>
     {
+      options.SupportNonNullableReferenceTypes();
+
       options.SwaggerDoc("v1", new OpenApiInfo
       {
         Version = "v1",

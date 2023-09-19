@@ -2,7 +2,9 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+using Microsoft.EntityFrameworkCore;
 using PinIsland.Api.Configurations;
+using PinIsland.Api.Database;
 using PinIsland.Api.Services;
 
 namespace PinIsland.Api.Extensions.Services;
@@ -11,6 +13,11 @@ public static class WebAppServiceExtensions
 {
   public static void ConfigureServices(this WebApplicationBuilder builder)
   {
+    var connectionString = builder.Configuration.GetConnectionStringOptions().PinIslandApiDevDb;
+    builder.Services.AddDbContext<AppDbContext>(options =>
+      options.UseSqlServer(connectionString,
+        builder => builder.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
     var idpOptions = builder.Configuration.GetIdentityProviderOptions();
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       .AddJwtBearer(options =>
@@ -37,6 +44,9 @@ public static class WebAppServiceExtensions
     });
 
     builder.Services.AddHttpContextAccessor();
+
+    builder.Services.AddMediatR(config => config
+      .RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
     // registers all services that inherit from your base service interface - IPinIslandApiScopedService
     builder.Services.AddBoundaryServices(Assembly.GetExecutingAssembly());

@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PinIsland.Api.Attributes;
+using PinIsland.Api.Domain.Authorization;
 
 namespace PinIsland.Api.Controllers.v1;
 
@@ -29,9 +31,13 @@ public class TestController : ControllerBase
 
   [HttpGet]
   [Route("private")]
-  [Authorize("read_access")]
+  [Authorize(Scopes.ReadAccess)]
+  [HasPermission(Permissions.CanReadPrivate)]
   public ActionResult<TestDto> GetPrivate()
   {
+    var user = Request.HttpContext.User;
+    var identity = user.Identity;
+    var claims = user.Claims.ToList();
     return Ok(new TestDto
     {
       Result = "Success from the private test",

@@ -14,7 +14,6 @@ public static class AuthorizationPolicyBuilderExtensions
         return scopes.All(scope => userScopes.Contains(scope, StringComparer.CurrentCulture));
       });
 
-
   public static List<string> GetUserScopes(this AuthorizationHandlerContext context) =>
     context?.User?
       .Claims
