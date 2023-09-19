@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PinIsland.Api.Database.Configurations;
 using PinIsland.Api.Domain;
 using PinIsland.Api.Domain.Authorization;
+using PinIsland.Api.Domain.User;
 using PinIsland.Api.Extensions.Application;
 using SmartEnum.EFCore;
 
@@ -11,6 +12,7 @@ namespace PinIsland.Api.Database;
 public sealed class AppDbContext : DbContext
 {
   public DbSet<RolePermission> RolePermissions { get; set; }
+  public DbSet<User> Users { get; set; }
 
   public AppDbContext(DbContextOptions<AppDbContext> options)
     : base(options)
@@ -22,6 +24,7 @@ public sealed class AppDbContext : DbContext
     modelBuilder.FilterSoftDeletedRecords();
 
     modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+    modelBuilder.ApplyConfiguration(new UserConfiguration());
   }
 
   protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
