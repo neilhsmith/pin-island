@@ -22,7 +22,7 @@ public static class GetRolePermission
     public async Task<RolePermissionDto> Handle(Query request, CancellationToken cancellationToken)
     {
       var rolePermission = await _dbContext.RolePermissions
-        .FirstAsync(rp => rp.Id == request.Id);
+        .FirstAsync(rp => rp.Id == request.Id, cancellationToken);
 
       return new RolePermissionDto
       {

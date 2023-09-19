@@ -61,8 +61,8 @@ public static class AddRolePermission
 
 public class CreateRolePermissionDto
 {
-  public string? Role { get; set; }
-  public string? Permission { get; set; }
+  public string Role { get; set; } = default!;
+  public string Permission { get; set; } = default!;
 }
 
 public class CreateRolePermissionDtoValidator : AbstractValidator<CreateRolePermissionDto>
