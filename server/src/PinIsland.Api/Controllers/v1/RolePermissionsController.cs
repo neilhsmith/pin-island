@@ -2,6 +2,7 @@ using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PinIsland.Api.Attributes;
 using PinIsland.Api.Domain;
 using PinIsland.Api.Domain.Authorization;
 using PinIsland.Api.Domain.Authorization.Dtos;
@@ -24,6 +25,7 @@ public class RolePermissionsController : ControllerBase
   }
 
   [Authorize(Policy = Scopes.ReadAccess)]
+  [HasPermission(Permissions.CanReadRolePermission)]
   [HttpGet("{id:guid}", Name = "GetRolePermission")]
   public async Task<ActionResult<RolePermissionDto>> GetRolePermission(Guid id)
   {
@@ -33,6 +35,7 @@ public class RolePermissionsController : ControllerBase
   }
 
   [Authorize(Policy = Scopes.ReadAccess)]
+  [HasPermission(Permissions.CanReadRolePermissions)]
   [HttpGet(Name = "GetRolePermissionList")]
   public async Task<ActionResult<PagedList<RolePermissionDto>>> GetRolePermissionList([FromQuery] RolePermissionParametersDto dto)
   {
@@ -57,6 +60,7 @@ public class RolePermissionsController : ControllerBase
   }
 
   [Authorize(Policy = Scopes.WriteAccess)]
+  [HasPermission(Permissions.CanCreateRolePermission)]
   [HttpPost(Name = "CreateRolePermission")]
   public async Task<ActionResult<RolePermissionDto>> CreateRolePermission(CreateRolePermissionDto dto)
   {
@@ -70,6 +74,7 @@ public class RolePermissionsController : ControllerBase
   }
 
   [Authorize(Policy = Scopes.WriteAccess)]
+  [HasPermission(Permissions.CanDeleteRolePermission)]
   [HttpDelete("{id:guid}", Name = "DeleteRolePermission")]
   public async Task<ActionResult> DeleteRolePermission(Guid id)
   {

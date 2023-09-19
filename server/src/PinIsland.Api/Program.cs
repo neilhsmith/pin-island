@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureServices();
 
 var app = builder.Build();
-using var scope = app.Services.CreateScope();
 
+//using var scope = app.Services.CreateScope();
 if (builder.Environment.IsDevelopment())
 {
   app.UseDeveloperExceptionPage();

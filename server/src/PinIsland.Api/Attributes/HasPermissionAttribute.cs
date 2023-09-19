@@ -1,34 +1,62 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using PinIsland.Api.Database;
+using PinIsland.Api.Domain.Authorization;
 
 namespace PinIsland.Api.Attributes;
 
-public class HasPermissionAttribute : ActionFilterAttribute
+public class HasPermissionAttribute : Attribute, IAuthorizationFilter
 {
-  private readonly ICollection<string> _permissions;
+  private readonly string _permission;
 
-  public HasPermissionAttribute(string permissions)
+  public HasPermissionAttribute(string permission)
   {
-    _permissions = permissions.Split(",");
+    _permission = permission;
   }
 
-  public override void OnActionExecuting(ActionExecutingContext filterContext)
+  public void OnAuthorization(AuthorizationFilterContext context)
   {
-    // get the user's roles from the httpcontext's claims
-    // get the role<->permission map from the db or, ideally, a cache
-    // get the acceptable roles for the given permissions
-    // throw if the user's roles are not in the list of acceptable roles
-
-    var claim = filterContext.HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "realm_access");
+    var claim = context.HttpContext.User.Claims
+      .FirstOrDefault(claim => claim.Type == "realm_access");
     if (claim == null)
-      throw new Exception("todo: forbidden");
+    {
+      context.Result = new ForbidResult();
+      return;
+    }
 
     var roles = JsonConvert.DeserializeObject<RealmAccessClaim>(claim.Value)?.Roles;
     if (roles == null)
-      throw new Exception("todo: forbidden");
+    {
+      context.Result = new ForbidResult();
+      return;
+    }
 
+    if (roles.Contains(Role.SuperUser.Value))
+    {
+      return;
+    }
 
+    var dbContext = context.HttpContext
+      .RequestServices
+      .GetService(typeof(AppDbContext)) as AppDbContext;
+
+    if (dbContext == null)
+    {
+      context.Result = new StatusCodeResult(500);
+      return;
+    }
+
+    // all permissions granted to the user's roles
+    var grantedPermissions = dbContext.RolePermissions
+      .Where(rp => roles.Contains(rp.Role))
+      .Select(rp => rp.Permission)
+      .ToList();
+
+    if (!grantedPermissions.Contains(_permission))
+    {
+      context.Result = new ForbidResult();
+    }
   }
 }
 
