@@ -15,10 +15,15 @@ export default defineManifest(async () => ({
   action: {
     default_popup: "src/apps/popup/index.html",
   },
+  background: {
+    service_worker: "src/apps/background/index.ts",
+    type: "module",
+  },
   content_scripts: [
     {
       js: ["src/apps/sidebar/index.tsx"],
       matches: ["http://*/*", "https://*/*", "<all_urls>"],
     },
   ],
+  options_page: "src/apps/options/index.html",
 }))
