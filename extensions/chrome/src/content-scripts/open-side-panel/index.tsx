@@ -13,4 +13,4 @@ ReactDOM.createRoot(root).render(
   </React.StrictMode>
 )
 
-console.log("content loaded")
+console.log("content script loaded")
