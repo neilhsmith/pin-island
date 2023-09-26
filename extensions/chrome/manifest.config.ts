@@ -30,5 +30,5 @@ export default defineManifest(async () => ({
   side_panel: {
     default_path: "src/pages/side-panel/index.html",
   },
-  permissions: ["contextMenus", "sidePanel"],
+  permissions: ["contextMenus", "sidePanel", "identity", "storage"],
 }))
