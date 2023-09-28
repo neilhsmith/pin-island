@@ -6,14 +6,13 @@ import {
   useEffect,
   useState,
 } from "react"
-import { AuthToken, User } from "./types"
+import { UserInfo, authMessages } from "./types"
 
-type Status = "idle" | "loading" | "logged_in" | "logged_out"
+type Status = "loading" | "logged_in" | "logged_out"
 
 type UserContextType = {
   status: Status
-  authToken?: AuthToken | null
-  user?: User | null
+  user?: UserInfo | null
 
   login: () => void
   logout: () => void
@@ -23,62 +22,70 @@ const UserContext = createContext<UserContextType>(
   null as unknown as UserContextType
 )
 
+const abortController = new AbortController()
+
 export const UserProvider = ({ children }: PropsWithChildren) => {
-  const [status, setStatus] = useState<Status>("idle")
-  const [authToken, setAuthToken] = useState<AuthToken | null>()
-  const [user, setUser] = useState<User | null>()
+  const [status, setStatus] = useState<Status>("loading")
+  const [user, setUser] = useState<UserInfo | null>()
 
   useEffect(() => {
-    soDo()
-    async function soDo() {
+    ;(async function () {
       const response = await chrome.runtime.sendMessage({
-        type: "login",
-        interactive: false,
+        type: authMessages.INIT,
+        abortController,
       })
 
       if (response.status === "success") {
-        setStatus("logged_in")
-        setAuthToken(response.authToken)
+        setStatus(response.user ? "logged_in" : "logged_out")
         setUser(response.user)
       } else {
-        // TODO: handle error
+        // display error?
         setStatus("logged_out")
       }
-    }
+    })()
+
+    return () => abortController.abort()
   }, [])
 
-  const login = useCallback(async () => {
-    setStatus("loading")
-    const response = await chrome.runtime.sendMessage({ type: "login" })
+  const login = useCallback(() => {
+    ;(async function () {
+      setStatus("loading")
+      const response = await chrome.runtime.sendMessage({
+        type: authMessages.LOGIN,
+      })
 
-    if (response.status === "success") {
-      setStatus("logged_in")
-      setAuthToken(response.authToken)
-      setUser(response.user)
-    } else {
-      // TODO: handle error
-      setStatus("logged_out")
-    }
+      if (response.status === "success") {
+        setStatus(response.user ? "logged_in" : "logged_out")
+        setUser(response.user)
+      } else {
+        // display error?
+        setStatus("logged_out")
+      }
+    })()
   }, [])
 
-  const logout = useCallback(async () => {
-    setStatus("loading")
-    const response = await chrome.runtime.sendMessage({ type: "logout" })
-    setStatus("logged_out")
+  const logout = useCallback(() => {
+    ;(async function () {
+      setStatus("loading")
+      const response = await chrome.runtime.sendMessage({
+        type: authMessages.LOGOUT,
+      })
 
-    if (response.status === "success") {
-      setAuthToken(null)
-      setUser(null)
-    } else {
-      // TODO: handle error
-    }
+      if (response.status === "success") {
+        setStatus("logged_out")
+        setUser(null)
+      } else {
+        // TODO: how to handle errors?
+        // think i need to know if we actually cleared the chrome storage and/or idp session
+      }
+    })()
   }, [])
 
+  console.log("UserProvider status", status)
   return (
     <UserContext.Provider
       value={{
         status,
-        authToken,
         user,
         login,
         logout,
