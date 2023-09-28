@@ -7,10 +7,10 @@ import { crx } from "@crxjs/vite-plugin"
 export default defineConfig({
   plugins: [react(), crx({ manifest: defineManifest })],
   server: {
-    port: 3000,
+    port: 3040,
     strictPort: true,
     hmr: {
-      clientPort: 3000,
+      clientPort: 3040,
     },
   },
 })
