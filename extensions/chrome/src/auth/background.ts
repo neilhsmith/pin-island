@@ -8,9 +8,9 @@ import {
 
 /**
  * TODO:
- * - [ ] consolidate calculating expiration_ats in both login & refresh
  * - [ ] cleanup / document which fns get/update storage
  *    - maybe move the pure fns to a util file?
+ * - [ ] validate the state / code_challenge / code_verifier
  * - [ ] create a type system for message types/payloads and responses
  * - [ ] figure out how the api util will work and get the token
  *    - create a demo which fetches from the private test endpoint
@@ -173,16 +173,10 @@ async function refreshAuthToken(
   if (!res.ok) throw new Error(res.statusText)
 
   const result = await res.json()
+  const newAuthToken = prepAuthToken(result)
 
-  const now = Date.now()
-  result.access_token_expires_at = now + (result.expires_in - 5) * 1000
-  result.refresh_token_expires_at = now + (result.refresh_expires_in - 5) * 1000
-
-  // delete result.expires_in
-  // delete result.refresh_expires_in
-
-  await storeAuthToken(result)
-  return result as AuthToken
+  await storeAuthToken(newAuthToken)
+  return newAuthToken
 }
 
 // ---
@@ -223,25 +217,7 @@ async function fetchAuthToken(
 
   const result = await res.json()
 
-  const now = Date.now()
-  result.access_token_expires_at = now + (result.expires_in - 5) * 1000
-  result.refresh_token_expires_at = now + (result.refresh_expires_in - 5) * 1000
-
-  console.log("-----")
-  console.log(
-    "secs to access_token expiration: ",
-    (result.access_token_expires_at - now) / 1000
-  )
-  console.log(
-    "secs to refresh_token expiration: ",
-    (result.refresh_token_expires_at - now) / 1000
-  )
-  console.log("-----")
-
-  //delete result.expires_in
-  //delete result.refresh_expires_in
-
-  return result as AuthToken
+  return prepAuthToken(result)
 }
 
 async function fetchUserInfo(
@@ -285,6 +261,19 @@ async function storeAuthToken(authToken: AuthToken) {
   await chrome.storage.local.set({
     [STORED_AUTHTOKEN_KEY]: authToken,
   })
+}
+
+function prepAuthToken(
+  authToken: AuthToken & { expires_in: number; refresh_expires_in: number }
+) {
+  const newAuthToken = { ...authToken }
+
+  const now = Date.now()
+  newAuthToken.access_token_expires_at = now + (authToken.expires_in - 5) * 1000
+  newAuthToken.refresh_token_expires_at =
+    now + (authToken.refresh_expires_in - 5) * 1000
+
+  return newAuthToken
 }
 
 function randomstring(length: number = 32) {
