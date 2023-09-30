@@ -1,3 +1,6 @@
+
+using PinIsland.Api.Domain.Groups;
+
 namespace PinIsland.Api.Domain.User;
 
 public class User : BaseEntity
@@ -15,4 +18,6 @@ public class User : BaseEntity
   public string? LastName { get; set; }
 
   public string? Webpage { get; set; }
+
+  public ICollection<Group>? Groups { get; set; }
 }
